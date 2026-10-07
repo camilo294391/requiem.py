@@ -110,14 +110,11 @@ def procesar_accion(comando_jugador):
             print("----------------------------\n")
 
         case "buscar":
-                if ubicacion == "hall":
-                    if "llave de picas" not in inventario:
+                if ubicacion == "hall" and "llave de picas" not in inventario and "chatarra" not in inventario:
                         print(f"Revisas atrás del mostrador. Encuentras una {OBJETO}'llave de picas'{RESET} y {OBJETO}'chatarra'{RESET}.")
                         inventario.append("llave de picas")
                         inventario.append("chatarra")
-                    else:
-                        print("Ya revisastes aqui. Solo quedan papeles viejos.")
-                
+    
                 elif ubicacion == "subterraneo":
                         if "lanzagranadas" not in inventario:
                             print("Te deslizas por el lodo esquivando los escombros...")
@@ -126,16 +123,35 @@ def procesar_accion(comando_jugador):
                         else:
                             print("No hay tiempo para buscar más. ¡El monstruo te persigue!")
                 
-                elif ubicacion == "ala_este":
+                elif ubicacion == "ala_este" and "medallon del leon" not in inventario:
                     if linterna_encendida:
-                        if "medallon del leon" not in inventario:
-                            print("Revisas las taquillas destrozadas bajo la luz de tu linterna.")
-                            print(f"¡Encuentras un pesado {OBJETO}'medallon del leon'{RESET} de bronce!")
-                            inventario.append("medallon del leon")
-                        else:
-                            print("Las taquillas ya están vacías.")
+                        print("Revisas las taquillas destrozadas bajo la luz de tu linterna.")
+                        print(f"¡Encuentras un pesado {OBJETO}'medallon del leon'{RESET} de bronce!")
+                        inventario.append("medallon del leon")
                     else:
                         print("Está demasiado oscuro. Si metes la mano ahí sin ver, algo podría morderte.")
+                        
+                elif ubicacion == "oficina_oeste" and "hierba verde" not in inventario and "polvora" not in inventario:
+                            print(f"Revisas el escritorio del policía. Encuentras una {OBJETO}'hierba verde'{RESET} y {OBJETO}'polvora'{RESET}.")
+                            inventario.append("hierba verde")
+                            inventario.append("polvora")
+
+                else:
+                    contador_busquedas_inutiles +=1
+                    if contador_busquedas_inutiles ==1:
+                        print("No encuentras nada de valor aquí")
+                    elif contador_busquedas_inutiles == 2:
+                        print(f"{ALERTA} Ya revisaste a fondo. Seguir buscando aquí es una pérdida de tiempo.{RESET}")
+                    elif contador_busquedas_inutiles == 3:
+                        print(f"{ALERTA}¡Deja de hacer ruido! Estás revolviendo basura inútil y podrías atraer a los infectados...{RESET}")   
+                    else:
+                        print(f"\n{ALERTA}¡TE LO ADVERTI! Hiciste demasiado ruido...{RESET}")
+                        print(f"{ALERTA}De las sombras emerge un infectado enorme empuñando un hacha de bomberos.{RESET}")
+                        print(f"{ALERTA}Antes de que puedas reaccionar, el hacha se hunde en tu cabeza.{RESET}")
+                        salud_jugador = 0
+                        print(f"Tu salud cae de golpe a: {salud_jugador}")
+                        print(f"\n{ALERTA} Tu terquedad te costó la vida... Fin del juego.{RESET}")
+                        juego_activo = False
                         
                 elif ubicacion == "oficina":
                         if "hierba verde" not in inventario and "polvora" not in inventario:
